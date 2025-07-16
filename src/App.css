@@ -1,0 +1,225 @@
+/* Modernized Daily Report App UI */
+#root {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0.5rem 1rem 2rem 1rem; /* Less top padding */
+  text-align: center;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  background: #f6f8fa;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 700px;
+  margin: 1.2rem auto 2.5rem auto; /* Less top margin */
+  padding: 2rem 1.5rem;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px #0001, 0 1.5px 6px #646cff11;
+}
+
+h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #3a3a4a;
+  letter-spacing: 0.5px;
+}
+
+h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+  color: #444;
+}
+
+h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 1.2em 0 0.5em 0;
+  color: #646cff;
+}
+
+.form-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.1em 1.5em;
+  background: #fff; /* Changed from #f5f7ff to pure white for better contrast */
+  padding: 1.5em 1em 1em 1em;
+  border-radius: 12px;
+  margin-bottom: 2.2em;
+  box-shadow: 0 1px 4px #646cff11;
+}
+
+.form-section input,
+.form-section select {
+  padding: 0.6em 0.8em;
+  border-radius: 7px;
+  border: 1px solid #bfc6e0;
+  font-size: 1em;
+  background: #fff;
+  transition: border 0.2s;
+  color: #111;
+}
+.form-section input:focus,
+.form-section select:focus {
+  border: 1.5px solid #646cff;
+  outline: none;
+}
+
+.form-section input::placeholder,
+.form-section select::placeholder {
+  color: #111;
+  opacity: 1;
+}
+.form-section label {
+  color: #111;
+  font-weight: 600;
+}
+
+.form-section button {
+  grid-column: span 2;
+  padding: 0.7em 1.5em;
+  background: linear-gradient(90deg, #646cff 60%, #535bf2 100%);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.08em;
+  margin-top: 0.5em;
+  box-shadow: 0 1px 4px #646cff22;
+  transition: background 0.2s, transform 0.1s;
+}
+.form-section button:hover,
+.form-section button:focus {
+  background: linear-gradient(90deg, #535bf2 60%, #646cff 100%);
+  transform: translateY(-2px) scale(1.03);
+}
+
+.tasks-section {
+  background: #f8faff;
+  border-radius: 12px;
+  padding: 1.5em 1em 1em 1em;
+  box-shadow: 0 1px 4px #646cff11;
+  margin-top: 1.5em;
+}
+.tasks-section h2 {
+  margin-top: 0;
+}
+.tasks-section > div > div {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px #646cff0a;
+  padding: 1em 1em 0.5em 1em;
+  margin-bottom: 1.2em;
+}
+.tasks-section strong {
+  color: #3a3a4a;
+  font-weight: 600;
+}
+.tasks-section ul {
+  list-style: disc inside;
+  margin: 0.5em 0 0.5em 1.2em;
+  padding: 0;
+}
+.tasks-section li {
+  margin-bottom: 0.5em;
+  font-size: 1em;
+  color: #444;
+  background: #f5f7ff;
+  border-radius: 5px;
+  padding: 0.4em 0.7em;
+  box-shadow: 0 1px 2px #646cff08;
+}
+.tasks-section p {
+  color: #888;
+  font-size: 1.05em;
+}
+.tasks-section button {
+  padding: 0.7em 1.5em;
+  background: linear-gradient(90deg, #646cff 60%, #535bf2 100%);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.08em;
+  margin-top: 1em;
+  margin-right: 1em;
+  box-shadow: 0 1px 4px #646cff22;
+  transition: background 0.2s, transform 0.1s;
+}
+.tasks-section button:disabled {
+  background: #bfc6e0;
+  color: #fff;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.tasks-section button:hover:not(:disabled),
+.tasks-section button:focus:not(:disabled) {
+  background: linear-gradient(90deg, #535bf2 60%, #646cff 100%);
+  transform: translateY(-2px) scale(1.03);
+}
+
+@media (max-width: 700px) {
+  .container {
+    padding: 1.2rem 0.2rem;
+    width: 100%;
+    min-width: 0;
+    border-radius: 10px;
+  }
+  .form-section {
+    grid-template-columns: 1fr;
+    gap: 1em;
+    padding: 1em 0.5em 0.5em 0.5em;
+    width: 100%;
+    border-radius: 8px;
+  }
+  .form-section input,
+  .form-section select,
+  .form-section button {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    font-size: 1em;
+  }
+  .tasks-section {
+    padding: 1em 0.5em 0.5em 0.5em;
+    border-radius: 8px;
+  }
+  h1 {
+    font-size: 1.5rem;
+  }
+  h2 {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .container {
+    padding: 0.5rem 0.1rem;
+    border-radius: 6px;
+  }
+  .form-section {
+    padding: 0.5em 0.2em 0.2em 0.2em;
+    border-radius: 5px;
+  }
+  .tasks-section {
+    padding: 0.5em 0.2em 0.2em 0.2em;
+    border-radius: 5px;
+  }
+  h1 {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .container, .form-section, .tasks-section {
+    padding: 0.2rem 0.05rem;
+    border-radius: 3px;
+  }
+  h1 {
+    font-size: 0.95rem;
+  }
+}
