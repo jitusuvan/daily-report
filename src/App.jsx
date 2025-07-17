@@ -3,9 +3,8 @@ import { jsPDF } from 'jspdf';
 import './App.css';
 
 const statusOptions = [
-  'Pending',
+  'Testing Pending',
   'In Progress',
-  'Under Development',
   'Completed',
 ];
 
@@ -25,6 +24,8 @@ function App() {
   const [testCaseId, setTestCaseId] = useState('');
   const [bugsFound, setBugsFound] = useState('');
   const [tasks, setTasks] = useState([]);
+  const [completedBugs, setCompletedBugs] = useState('');
+
 
   const handleAddTask = () => {
     if (!appName || !taskName) return;
@@ -37,6 +38,7 @@ function App() {
         completedPercent: completedPercent || '0',
         category,
         remarks,
+        completedBugs,
         testCaseId: category === 'Testing' ? testCaseId : '',
         bugsFound: category === 'Testing' ? bugsFound : '',
       },
@@ -47,6 +49,7 @@ function App() {
     setRemarks('');
     setTestCaseId('');
     setBugsFound('');
+    setCompletedBugs('');
     setStatus(statusOptions[0]);
     // Do not clear category after adding a task
   };
@@ -116,6 +119,9 @@ function App() {
                 details += ` • No. of Bugs: ${task.bugsFound}`;
               }
             }
+            if (task.completedBugs && task.completedBugs !== '0') {
+              details += ` • Completed Bugs: ${task.completedBugs}`;
+            }
             y += 7; // More space for bigger font
             // Wrap details if too long
             const detailsLines = doc.splitTextToSize(details, 170);
@@ -137,6 +143,7 @@ function App() {
     setRemarks('');
     setTestCaseId('');
     setBugsFound('');
+    setCompletedBugs('');
     setTasks([]);
   };
 
@@ -149,6 +156,7 @@ function App() {
     setRemarks('');
     setTestCaseId('');
     setBugsFound('');
+    setCompletedBugs('');
     setTasks([]);
   };
 
@@ -188,6 +196,13 @@ function App() {
             <option key={opt} value={opt}>{opt}</option>
           ))}
         </select>
+        <input
+          type="text"
+          placeholder="Completed Bugs"
+          min="0"
+          value={completedBugs}
+          onChange={e => setCompletedBugs(e.target.value)}
+        />
         <label style={{ display: 'flex', alignItems: 'center', gap: '0.5em' }}>
           Completed %
           <input
@@ -239,6 +254,7 @@ function App() {
                   {Object.keys(groupedTasks[cat]).map(app => (
                     <div key={app} style={{ marginLeft: '1em', marginBottom: '1em' }}>
                       <strong>{app}</strong>
+                    
                       <ul>
                         {groupedTasks[cat][app].map((task, idx) => (
                           <li key={idx}>
@@ -249,6 +265,7 @@ function App() {
                                 {task.bugsFound && task.bugsFound !== '0' && `, No. of Bugs: ${task.bugsFound}`}
                               </>
                             )}
+                              {task.completedBugs && task.completedBugs !== '0' && `, Completed Bugs: ${task.completedBugs}`}
                           </li>
                         ))}
                       </ul>
