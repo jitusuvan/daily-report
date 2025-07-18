@@ -11,7 +11,7 @@
 
 .container {
   max-width: 700px;
-  margin: 1.2rem auto 2.5rem auto; /* Less top margin */
+  margin:  auto; /* Less top margin */
   padding: 2rem 1.5rem;
   background: #fff;
   border-radius: 18px;
@@ -21,7 +21,8 @@
 h1 {
   font-size: 2.2rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
+  margin-top: 0rem;
+  margin-bottom: 10px;
   color: #3a3a4a;
   letter-spacing: 0.5px;
 }
@@ -49,6 +50,87 @@ h3 {
   border-radius: 12px;
   margin-bottom: 2.2em;
   box-shadow: 0 1px 4px #646cff11;
+}
+
+.floating-label {
+  position: relative;
+  margin-bottom: 0.3em;
+  width: 100%;
+}
+
+.form-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.3em 1.2em;
+  background: #fff; /* Changed from #f5f7ff to pure white for better contrast */
+  padding: 0.4em 1em 0.3em 1em;
+  border-radius: 12px;
+  margin-bottom: 2.2em;
+  box-shadow: 0 1px 4px #646cff11;
+}
+
+.floating-label input,
+.floating-label select {
+  width: 100%;
+  padding: 12px 12px 12px 12px;
+  font-size: 1em;
+  border: 1px solid #bfc6e0;
+  border-radius: 7px;
+  background: #fff;
+  color: #111;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.floating-label input:focus,
+.floating-label select:focus {
+  border-color: #646cff;
+}
+
+.floating-label label {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  color: #999;
+  font-size: 1em;
+  font-weight: 600;
+  pointer-events: none;
+  transition: all 0.2s ease-out;
+  background: white;
+  padding: 0 4px;
+  border-radius: 4px;
+}
+
+.floating-label input:focus + label,
+.floating-label input:not(:placeholder-shown) + label,
+.floating-label select:focus + label,
+.floating-label select:not([value=""]) + label {
+  top: -8px;
+  left: 8px;
+  font-size: 0.8em;
+  color: #646cff;
+}
+
+/* Fix smaller input width for Completed % */
+.floating-label input[type="number"] {
+  max-width: 100%;
+  padding: 12px 12px 12px 12px;
+}
+
+/* Adjust label position for Completed % */
+.floating-label:nth-child(12) label {
+  top: 10px;
+  left: 10px;
+}
+
+/* Make Completed % input container span only one column */
+.form-section > .floating-label:nth-child(12) {
+  grid-column: 2 / 3;
+}
+
+/* Make Completed Bug input container span only one column */
+.form-section > .floating-label:nth-child(11) {
+  grid-column: 1 / 2;
 }
 
 .form-section input,
@@ -87,7 +169,7 @@ h3 {
   cursor: pointer;
   font-weight: bold;
   font-size: 1.08em;
-  margin-top: 0.5em;
+  margin-top: 0.3em;
   box-shadow: 0 1px 4px #646cff22;
   transition: background 0.2s, transform 0.1s;
 }
@@ -160,6 +242,52 @@ h3 {
 .tasks-section button:focus:not(:disabled) {
   background: linear-gradient(90deg, #535bf2 60%, #646cff 100%);
   transform: translateY(-2px) scale(1.03);
+}
+
+.floating-label {
+  position: relative;
+  margin-bottom: 1.5em;
+}
+
+.floating-label input,
+.floating-label select {
+  width: 100%;
+  padding: 12px 12px 12px 12px;
+  font-size: 1em;
+  border: 1px solid #bfc6e0;
+  border-radius: 7px;
+  background: #fff;
+  color: #111;
+  outline: none;
+}
+
+.floating-label input:focus,
+.floating-label select:focus {
+  border-color: #646cff;
+}
+
+.floating-label label {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  color: #999;
+  font-size: 1em;
+  font-weight: 600;
+  pointer-events: none;
+  transition: all 0.2s ease-out;
+  background: white;
+  padding: 0 4px;
+  border-radius: 4px;
+}
+
+.floating-label input:focus + label,
+.floating-label input:not(:placeholder-shown) + label,
+.floating-label select:focus + label,
+.floating-label select:not([value=""]) + label {
+  top: -8px;
+  left: 8px;
+  font-size: 0.8em;
+  color: #646cff;
 }
 
 @media (max-width: 700px) {

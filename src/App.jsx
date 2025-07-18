@@ -195,59 +195,90 @@ function App() {
     <div className="container">
       <h1>Daily Report App</h1>
       <div className="form-section">
-        <input
-          type="text"
-          placeholder="App Name"
-          value={appName}
-          onChange={(e) => setAppName(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Task Name"
-          value={taskName}
-          onChange={(e) => setTaskName(e.target.value)}
-        />
-        <select value={category} onChange={handleCategoryChange}>
-          {categoryOptions.map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
-          ))}
-        </select>
-        <select value={status} onChange={handleStatusChange}>
-          {statusOptions.map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
-          ))}
-        </select>
-        <label htmlFor="completedBugInput" style={{ display: 'block', marginBottom: '4px' }}>Completed Bug</label>
-        <input
-          id="completedBugInput"
-          type="text"
-          placeholder=""
-          min="0"
-          value={completedBugsId}
-          onChange={(e) => setCompletedBugsId(e.target.value)}
-        />
-        <label style={{ display: "flex", alignItems: "center", gap: "0.5em" }}>
-          Completed %
+        <div className="floating-label">
           <input
+            id="appNameInput"
+            type="text"
+            value={appName}
+            onChange={(e) => setAppName(e.target.value)}
+            placeholder=" "
+          />
+          <label htmlFor="appNameInput">App Name</label>
+        </div>
+        <div className="floating-label">
+          <input
+            id="taskNameInput"
+            type="text"
+            value={taskName}
+            onChange={(e) => setTaskName(e.target.value)}
+            placeholder=" "
+          />
+          <label htmlFor="taskNameInput">Task Name</label>
+        </div>
+        <div className="floating-label">
+          <select
+            id="categorySelect"
+            value={category}
+            onChange={handleCategoryChange}
+            placeholder=" "
+          >
+            {categoryOptions.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="categorySelect">Category</label>
+        </div>
+        <div className="floating-label">
+          <select
+            id="statusSelect"
+            value={status}
+            onChange={handleStatusChange}
+            placeholder=" "
+          >
+            {statusOptions.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="statusSelect">Status</label>
+        </div>
+        <div className="floating-label">
+          <input
+            id="completedBugInput"
+            type="text"
+            min="0"
+            value={completedBugsId}
+            onChange={(e) => setCompletedBugsId(e.target.value)}
+            placeholder=" "
+          />
+          <label htmlFor="completedBugInput">Completed Bug</label>
+        </div>
+        <div className="floating-label">
+          <input
+            id="completedPercentInput"
             type="number"
-            placeholder="Completed %"
             min="0"
             max="100"
             value={completedPercent}
             onChange={(e) => setCompletedPercent(e.target.value)}
-            style={{ width: "70px" }}
+            placeholder=" "
+            style={{ width: '70px' }}
           />
-        </label>
-        <input
-          type="text"
-          placeholder="Remarks"
-          value={remarks}
-          onChange={(e) => setRemarks(e.target.value)}
-        />
+          <label htmlFor="completedPercentInput">Completed %</label>
+        </div>
+        <div className="floating-label">
+          <input
+            id="remarksInput"
+            type="text"
+            value={remarks}
+            onChange={(e) => setRemarks(e.target.value)}
+            placeholder=" "
+          />
+          <label htmlFor="remarksInput">Remarks</label>
+        </div>
         <button onClick={handleAddTask}>
           {editIndex > -1 ? "Save Task" : "Add Task"}
         </button>
