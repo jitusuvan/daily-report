@@ -1,28 +1,20 @@
-import { useState } from 'react';
-import { jsPDF } from 'jspdf';
-import './App.css';
+import { useState } from "react";
+import { jsPDF } from "jspdf";
+import "./App.css";
 
-const statusOptions = [
-  'Testing Pending',
-  'In Progress',
-  'Completed',
-];
+const statusOptions = ["Testing Pending", "In Progress", "Completed"];
 
-const categoryOptions = [
-  'Frontend',
-  'Backend',
-  'Testing',
-];
+const categoryOptions = ["Frontend", "Backend", "Testing"];
 
 function App() {
-  const [appName, setAppName] = useState('');
-  const [taskName, setTaskName] = useState('');
+  const [appName, setAppName] = useState("");
+  const [taskName, setTaskName] = useState("");
   const [status, setStatus] = useState(statusOptions[0]);
-  const [completedPercent, setCompletedPercent] = useState('');
+  const [completedPercent, setCompletedPercent] = useState("");
   const [category, setCategory] = useState(categoryOptions[0]);
-  const [remarks, setRemarks] = useState('');
+  const [remarks, setRemarks] = useState("");
   const [tasks, setTasks] = useState([]);
-  const [completedBugsId, setCompletedBugsId] = useState('');
+  const [completedBugsId, setCompletedBugsId] = useState("");
   const [editIndex, setEditIndex] = useState(-1);
 
   const handleAddTask = () => {
@@ -34,7 +26,7 @@ function App() {
         appName,
         taskName,
         status,
-        completedPercent: completedPercent || '0',
+        completedPercent: completedPercent || "0",
         category,
         remarks,
         completedBugsId,
@@ -49,18 +41,18 @@ function App() {
           appName,
           taskName,
           status,
-          completedPercent: completedPercent || '0',
+          completedPercent: completedPercent || "0",
           category,
           remarks,
           completedBugsId,
         },
       ]);
     }
-    setAppName('');
-    setTaskName('');
-    setCompletedPercent('');
-    setRemarks('');
-    setCompletedBugsId('');
+    setAppName("");
+    setTaskName("");
+    setCompletedPercent("");
+    setRemarks("");
+    setCompletedBugsId("");
     setStatus(statusOptions[0]);
   };
 
@@ -71,76 +63,82 @@ function App() {
     if (tasks.length === 0) return;
     const doc = new jsPDF();
     doc.setFontSize(22);
-    doc.text('Paisavara App – Daily Status Report', 14, 18);
+    doc.text("Paisavara App – Daily Status Report", 14, 18);
     doc.setFontSize(14);
     const today = new Date();
-    const pad = n => n.toString().padStart(2, '0');
-    const dateStr = `${pad(today.getDate())}-${pad(today.getMonth() + 1)}-${today.getFullYear()}`;
-    doc.setFont(undefined, 'bold');
+    const pad = (n) => n.toString().padStart(2, "0");
+    const dateStr = `${pad(today.getDate())}-${pad(
+      today.getMonth() + 1
+    )}-${today.getFullYear()}`;
+    doc.setFont(undefined, "bold");
     doc.text(`Date:`, 14, 30);
-    doc.setFont(undefined, 'normal');
+    doc.setFont(undefined, "normal");
     doc.text(dateStr, 32, 30);
     let y = 38;
 
-    categoryOptions.forEach(cat => {
-      const catTasks = tasks.filter(t => t.category === cat);
+    categoryOptions.forEach((cat) => {
+      const catTasks = tasks.filter((t) => t.category === cat);
       if (catTasks.length > 0) {
         doc.setFontSize(16);
-        doc.setFont(undefined, 'bold');
+        doc.setFont(undefined, "bold");
         doc.text(cat, 14, y);
         y += 10;
         doc.setLineWidth(0.2);
         doc.line(14, y, 195, y);
         y += 10;
-        const apps = [...new Set(catTasks.map(t => t.appName))];
+        const apps = [...new Set(catTasks.map((t) => t.appName))];
         doc.setFontSize(14);
-        apps.forEach(app => {
-          doc.setFont(undefined, 'bold');
+        apps.forEach((app) => {
+          doc.setFont(undefined, "bold");
           doc.text(app, 14, y);
           y += 7;
-          doc.setFont(undefined, 'normal');
-          catTasks.filter(t => t.appName === app).forEach(task => {
-            doc.setDrawColor(0, 0, 0);
-            doc.circle(17, y - 2, 1.5, 'F');
-            doc.setTextColor(0, 0, 0);
-            doc.setFont(undefined, 'bold');
-            doc.text(task.taskName, 22, y);
-            doc.setFont(undefined, 'normal');
-            doc.setFontSize(13);
-            let details = `Status: ${task.status} • Completion: ${task.completedPercent}% • Remarks: ${task.remarks || '-'}`;
-            if (task.completedBugsId && task.completedBugsId !== '0') {
-              details += ` • Completed Bugs ID: ${task.completedBugsId}`;
-            }
-            y += 7;
-            const detailsLines = doc.splitTextToSize(details, 170);
-            doc.text(detailsLines, 26, y);
-            y += 8 * detailsLines.length + 2;
-            doc.setFontSize(14);
-          });
+          doc.setFont(undefined, "normal");
+          catTasks
+            .filter((t) => t.appName === app)
+            .forEach((task) => {
+              doc.setDrawColor(0, 0, 0);
+              doc.circle(17, y - 2, 1.5, "F");
+              doc.setTextColor(0, 0, 0);
+              doc.setFont(undefined, "bold");
+              doc.text(task.taskName, 22, y);
+              doc.setFont(undefined, "normal");
+              doc.setFontSize(13);
+              let details = `Status: ${task.status} • Completion: ${
+                task.completedPercent
+              }% • Remarks: ${task.remarks || "-"}`;
+              if (task.completedBugsId && task.completedBugsId !== "0") {
+                details += ` • Completed Bugs : ${task.completedBugsId}`;
+              }
+              y += 7;
+              const detailsLines = doc.splitTextToSize(details, 170);
+              doc.text(detailsLines, 26, y);
+              y += 8 * detailsLines.length + 2;
+              doc.setFontSize(14);
+            });
         });
         y += 6;
       }
     });
 
     doc.save(`Paisavara Report-${dateStr}.pdf`);
-    setAppName('');
-    setTaskName('');
+    setAppName("");
+    setTaskName("");
     setStatus(statusOptions[0]);
-    setCompletedPercent('');
+    setCompletedPercent("");
     setCategory(categoryOptions[0]);
-    setRemarks('');
-    setCompletedBugsId('');
+    setRemarks("");
+    setCompletedBugsId("");
     setTasks([]);
   };
 
   const handleClearAll = () => {
-    setAppName('');
-    setTaskName('');
+    setAppName("");
+    setTaskName("");
     setStatus(statusOptions[0]);
-    setCompletedPercent('');
+    setCompletedPercent("");
     setCategory(categoryOptions[0]);
-    setRemarks('');
-    setCompletedBugsId('');
+    setRemarks("");
+    setCompletedBugsId("");
     setTasks([]);
     setEditIndex(-1);
   };
@@ -171,13 +169,26 @@ function App() {
     handleClearAll();
   };
 
-  const groupedTasks = {};
-  categoryOptions.forEach(cat => {
-    groupedTasks[cat] = {};
-    tasks.filter(t => t.category === cat).forEach(task => {
-      if (!groupedTasks[cat][task.appName]) groupedTasks[cat][task.appName] = [];
-      groupedTasks[cat][task.appName].push(task);
+  const handleRemoveCompletedBugsId = () => {
+    const updatedTasks = tasks.map(task => {
+      if (task.status === 'Completed') {
+        return { ...task, completedBugsId: '' };
+      }
+      return task;
     });
+    setTasks(updatedTasks);
+  };
+
+  const groupedTasks = {};
+  categoryOptions.forEach((cat) => {
+    groupedTasks[cat] = {};
+    tasks
+      .filter((t) => t.category === cat)
+      .forEach((task) => {
+        if (!groupedTasks[cat][task.appName])
+          groupedTasks[cat][task.appName] = [];
+        groupedTasks[cat][task.appName].push(task);
+      });
   });
 
   return (
@@ -188,32 +199,38 @@ function App() {
           type="text"
           placeholder="App Name"
           value={appName}
-          onChange={e => setAppName(e.target.value)}
+          onChange={(e) => setAppName(e.target.value)}
         />
         <input
           type="text"
           placeholder="Task Name"
           value={taskName}
-          onChange={e => setTaskName(e.target.value)}
+          onChange={(e) => setTaskName(e.target.value)}
         />
         <select value={category} onChange={handleCategoryChange}>
-          {categoryOptions.map(opt => (
-            <option key={opt} value={opt}>{opt}</option>
+          {categoryOptions.map((opt) => (
+            <option key={opt} value={opt}>
+              {opt}
+            </option>
           ))}
         </select>
         <select value={status} onChange={handleStatusChange}>
-          {statusOptions.map(opt => (
-            <option key={opt} value={opt}>{opt}</option>
+          {statusOptions.map((opt) => (
+            <option key={opt} value={opt}>
+              {opt}
+            </option>
           ))}
         </select>
+        <label htmlFor="completedBugInput" style={{ display: 'block', marginBottom: '4px' }}>Completed Bug</label>
         <input
+          id="completedBugInput"
           type="text"
-          placeholder="Completed Bugs ID"
+          placeholder=""
           min="0"
           value={completedBugsId}
-          onChange={e => setCompletedBugsId(e.target.value)}
+          onChange={(e) => setCompletedBugsId(e.target.value)}
         />
-        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5em' }}>
+        <label style={{ display: "flex", alignItems: "center", gap: "0.5em" }}>
           Completed %
           <input
             type="number"
@@ -221,19 +238,23 @@ function App() {
             min="0"
             max="100"
             value={completedPercent}
-            onChange={e => setCompletedPercent(e.target.value)}
-            style={{ width: '70px' }}
+            onChange={(e) => setCompletedPercent(e.target.value)}
+            style={{ width: "70px" }}
           />
         </label>
         <input
           type="text"
           placeholder="Remarks"
           value={remarks}
-          onChange={e => setRemarks(e.target.value)}
+          onChange={(e) => setRemarks(e.target.value)}
         />
-        <button onClick={handleAddTask}>{editIndex > -1 ? 'Save Task' : 'Add Task'}</button>
+        <button onClick={handleAddTask}>
+          {editIndex > -1 ? "Save Task" : "Add Task"}
+        </button>
         {editIndex > -1 && (
-          <button onClick={handleCancelEdit} style={{ marginLeft: '10px' }}>Cancel Edit</button>
+          <button onClick={handleCancelEdit} style={{ marginLeft: "10px" }}>
+            Cancel Edit
+          </button>
         )}
       </div>
       <div className="tasks-section">
@@ -242,38 +263,76 @@ function App() {
           <p>No tasks added yet.</p>
         ) : (
           <div>
-            {categoryOptions.map(cat => (
-              Object.keys(groupedTasks[cat]).length > 0 && (
-                <div key={cat} style={{ marginBottom: '1.5em', textAlign: 'left' }}>
-                  <h3>{cat}</h3>
-                  {Object.keys(groupedTasks[cat]).map(app => (
-                    <div key={app} style={{ marginLeft: '1em', marginBottom: '1em' }}>
-                      <strong>{app}</strong>
-                          <ul>
-                            {groupedTasks[cat][app].map((task, idx) => (
-                              <li key={idx}>
-                                <span style={{ fontWeight: 500 }}>{task.taskName}</span> — Status: {task.status}, Completed: {task.completedPercent}%, Remarks: {task.remarks || '-'}
-                                {task.completedBugsId && task.completedBugsId !== '0' && `, Completed Bugs ID: ${task.completedBugsId}`}
-                                {' '}
-                                <button onClick={() => handleEditTask(tasks.findIndex(t => t === task))} style={{ marginLeft: '10px' }}>Edit</button>
-                                <button onClick={() => handleDeleteTask(tasks.findIndex(t => t === task))} style={{ marginLeft: '5px' }}>Delete</button>
-                              </li>
-                            ))}
-                          </ul>
-                    </div>
-                  ))}
-                </div>
-              )
-            ))}
+            {categoryOptions.map(
+              (cat) =>
+                Object.keys(groupedTasks[cat]).length > 0 && (
+                  <div
+                    key={cat}
+                    style={{ marginBottom: "1.5em", textAlign: "left" }}
+                  >
+                    <h3>{cat}</h3>
+                    {Object.keys(groupedTasks[cat]).map((app) => (
+                      <div
+                        key={app}
+                        style={{ marginLeft: "1em", marginBottom: "1em" }}
+                      >
+                        <strong>{app}</strong>
+                        <ul>
+                          {groupedTasks[cat][app].map((task, idx) => (
+                            <li key={idx}>
+                              <span style={{ fontWeight: 500 }}>
+                                {task.taskName}
+                              </span>{" "}
+                              — Status: {task.status}, Completed:{" "}
+                              {task.completedPercent}%, Remarks:{" "}
+                              {task.remarks || "-"}
+                              {task.completedBugsId &&
+                                task.completedBugsId !== "0" &&
+                                `, Completed Bugs: ${task.completedBugsId}`}{" "}
+                              <button
+                                onClick={() =>
+                                  handleEditTask(
+                                    tasks.findIndex((t) => t === task)
+                                  )
+                                }
+                                style={{ marginLeft: "10px" }}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() =>
+                                  handleDeleteTask(
+                                    tasks.findIndex((t) => t === task)
+                                  )
+                                }
+                                style={{ marginLeft: "5px" }}
+                              >
+                                Delete
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                )
+            )}
           </div>
         )}
-        <button onClick={handleGeneratePDF} disabled={tasks.length === 0} style={{ marginTop: '1em', marginRight: '1em' }}>
+        <button
+          onClick={handleGeneratePDF}
+          disabled={tasks.length === 0}
+          style={{ marginTop: "1em", marginRight: "1em" }}
+        >
           Generate PDF Report
         </button>
-        <button onClick={handleClearAll} style={{ marginTop: '1em' }}>Clear All</button>
+
+        <button onClick={handleClearAll} style={{ marginTop: "1em" }}>
+          Clear All
+        </button>
       </div>
     </div>
   );
 }
 
-export default App
+export default App;
