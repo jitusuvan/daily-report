@@ -21,16 +21,16 @@ function App() {
   const [completedPercent, setCompletedPercent] = useState('');
   const [category, setCategory] = useState(categoryOptions[0]);
   const [remarks, setRemarks] = useState('');
-  const [bugsId, setBugsId] = useState('');
-  const [bugsFound, setBugsFound] = useState('');
   const [tasks, setTasks] = useState([]);
   const [completedBugsId, setCompletedBugsId] = useState('');
+  const [editIndex, setEditIndex] = useState(-1);
 
   const handleAddTask = () => {
     if (!appName || !taskName) return;
-    setTasks([
-      ...tasks,
-      {
+    if (editIndex > -1) {
+      // Update existing task
+      const updatedTasks = [...tasks];
+      updatedTasks[editIndex] = {
         appName,
         taskName,
         status,
@@ -38,16 +38,28 @@ function App() {
         category,
         remarks,
         completedBugsId,
-        bugsId: category === 'Testing' ? bugsId : '',
-        bugsFound: category === 'Testing' ? bugsFound : '',
-      },
-    ]);
+      };
+      setTasks(updatedTasks);
+      setEditIndex(-1);
+    } else {
+      // Add new task
+      setTasks([
+        ...tasks,
+        {
+          appName,
+          taskName,
+          status,
+          completedPercent: completedPercent || '0',
+          category,
+          remarks,
+          completedBugsId,
+        },
+      ]);
+    }
     setAppName('');
     setTaskName('');
     setCompletedPercent('');
     setRemarks('');
-    setBugsId('');
-    setBugsFound('');
     setCompletedBugsId('');
     setStatus(statusOptions[0]);
   };
@@ -96,12 +108,6 @@ function App() {
             doc.setFont(undefined, 'normal');
             doc.setFontSize(13);
             let details = `Status: ${task.status} • Completion: ${task.completedPercent}% • Remarks: ${task.remarks || '-'}`;
-            if (cat === 'Testing') {
-              details += ` • Bugs ID: ${task.bugsId || '-'}`;
-              if (task.bugsFound && task.bugsFound !== '0') {
-                details += ` • No. of Bugs: ${task.bugsFound}`;
-              }
-            }
             if (task.completedBugsId && task.completedBugsId !== '0') {
               details += ` • Completed Bugs ID: ${task.completedBugsId}`;
             }
@@ -123,8 +129,6 @@ function App() {
     setCompletedPercent('');
     setCategory(categoryOptions[0]);
     setRemarks('');
-    setBugsId('');
-    setBugsFound('');
     setCompletedBugsId('');
     setTasks([]);
   };
@@ -136,10 +140,35 @@ function App() {
     setCompletedPercent('');
     setCategory(categoryOptions[0]);
     setRemarks('');
-    setBugsId('');
-    setBugsFound('');
     setCompletedBugsId('');
     setTasks([]);
+    setEditIndex(-1);
+  };
+
+  const handleEditTask = (index) => {
+    const task = tasks[index];
+    setAppName(task.appName);
+    setTaskName(task.taskName);
+    setStatus(task.status);
+    setCompletedPercent(task.completedPercent);
+    setCategory(task.category);
+    setRemarks(task.remarks);
+    setCompletedBugsId(task.completedBugsId);
+    setEditIndex(index);
+  };
+
+  const handleDeleteTask = (index) => {
+    const updatedTasks = tasks.filter((_, i) => i !== index);
+    setTasks(updatedTasks);
+    if (editIndex === index) {
+      handleClearAll();
+    } else if (editIndex > index) {
+      setEditIndex(editIndex - 1);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    handleClearAll();
   };
 
   const groupedTasks = {};
@@ -196,30 +225,16 @@ function App() {
             style={{ width: '70px' }}
           />
         </label>
-        {category === 'Testing' && (
-          <>
-            <input
-              type="text"
-              placeholder="Bugs ID"
-              value={bugsId}
-              onChange={e => setBugsId(e.target.value)}
-            />
-            <input
-              type="number"
-              placeholder="No. of Bugs Found"
-              min="0"
-              value={bugsFound}
-              onChange={e => setBugsFound(e.target.value)}
-            />
-          </>
-        )}
         <input
           type="text"
           placeholder="Remarks"
           value={remarks}
           onChange={e => setRemarks(e.target.value)}
         />
-        <button onClick={handleAddTask}>Add Task</button>
+        <button onClick={handleAddTask}>{editIndex > -1 ? 'Save Task' : 'Add Task'}</button>
+        {editIndex > -1 && (
+          <button onClick={handleCancelEdit} style={{ marginLeft: '10px' }}>Cancel Edit</button>
+        )}
       </div>
       <div className="tasks-section">
         <h2>Tasks</h2>
@@ -234,20 +249,17 @@ function App() {
                   {Object.keys(groupedTasks[cat]).map(app => (
                     <div key={app} style={{ marginLeft: '1em', marginBottom: '1em' }}>
                       <strong>{app}</strong>
-                      <ul>
-                        {groupedTasks[cat][app].map((task, idx) => (
-                          <li key={idx}>
-                            <span style={{ fontWeight: 500 }}>{task.taskName}</span> — Status: {task.status}, Completed: {task.completedPercent}%, Remarks: {task.remarks || '-'}
-                            {cat === 'Testing' && (
-                              <>
-                                , Bugs ID: {task.bugsId || '-'}
-                                {task.bugsFound && task.bugsFound !== '0' && `, No. of Bugs: ${task.bugsFound}`}
-                              </>
-                            )}
-                            {task.completedBugsId && task.completedBugsId !== '0' && `, Completed Bugs ID: ${task.completedBugsId}`}
-                          </li>
-                        ))}
-                      </ul>
+                          <ul>
+                            {groupedTasks[cat][app].map((task, idx) => (
+                              <li key={idx}>
+                                <span style={{ fontWeight: 500 }}>{task.taskName}</span> — Status: {task.status}, Completed: {task.completedPercent}%, Remarks: {task.remarks || '-'}
+                                {task.completedBugsId && task.completedBugsId !== '0' && `, Completed Bugs ID: ${task.completedBugsId}`}
+                                {' '}
+                                <button onClick={() => handleEditTask(tasks.findIndex(t => t === task))} style={{ marginLeft: '10px' }}>Edit</button>
+                                <button onClick={() => handleDeleteTask(tasks.findIndex(t => t === task))} style={{ marginLeft: '5px' }}>Delete</button>
+                              </li>
+                            ))}
+                          </ul>
                     </div>
                   ))}
                 </div>
@@ -264,4 +276,4 @@ function App() {
   );
 }
 
-export default App;
+export default App
